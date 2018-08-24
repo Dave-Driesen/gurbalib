@@ -28,6 +28,17 @@ string query_gender_pronoun(void) {
    }
 }
 
+string query_gender_object_pronoun(void) {
+   switch (gender) {
+      case "male":
+         return "him";
+      case "female":
+         return "her";
+      default:
+         return "it";
+   }
+}
+
 string query_gender_determiner(void) {
    switch (gender) {
       case "male":

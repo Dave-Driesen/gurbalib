@@ -73,6 +73,11 @@ string *compose_message(object who, string msg, object target,
                others += who->query_gender_determiner()  + " ";
                pronounFlag = 1;
                break;
+            case 'r':
+               us += "you ";
+               them += who->query_gender_object_pronoun() + " ";
+               others += who->query_gender_object_pronoun() + " ";
+               break;
             case 'v':
                if (strlen(words[i]) < 3) {
                   break;
