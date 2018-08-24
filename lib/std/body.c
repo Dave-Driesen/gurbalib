@@ -8,6 +8,7 @@ inherit hp "/std/body/hit_points";
 inherit hb "/std/body/heart_beat";
 inherit "/std/body/armor";      /* Added by Fudge */
 inherit "/std/body/weapon";     /* Added by Fudge */
+inherit "/std/body/mount";      /* Added by Dave Driesen */
 inherit com "/std/combat";
 inherit "/std/body/gender";
 inherit "/std/body/race";
@@ -27,11 +28,27 @@ int is_living(void) {
 }
 
 string query_name(void) {
-   return living_name;
+     
+   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
+      /* For generic-named NPCs we return nil 
+       * because it appears the calling code is built that way */
+      return nil;
+   } else {
+      /* For named NPCs, return the actual name */
+      return  living_name;
+   }
 }
 
 string query_Name(void) {
-   return capitalize(living_name);
+   
+   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
+      /* For generic-named NPCs we return nil 
+       * because it appears the calling code is built that way */
+      return nil;
+   } else {
+      /* For named NPCs, return the actual name */
+      return capitalize(living_name);
+   }
 }
 
 int is_possessed(void) {
@@ -66,7 +83,7 @@ void set_possessing(object ob) {
 
 void set_name(string name) {
    living_name = name;
-   set_id(name);
+   add_id(name);
 }
 
 void create(void) {
@@ -77,5 +94,6 @@ void create(void) {
    equipment = ([]);
    living_name = "mudlib";
    wielding = ({ });
+   riding = ({ });
 }
 

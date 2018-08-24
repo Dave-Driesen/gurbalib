@@ -223,9 +223,12 @@ void die(void) {
       this_object()->move(VOID);
       this_object()->message("You have died.");
       this_object()->clear_money();
+      this_object()->clear_mounts();
    } else {
       if (this_object()<-"/std/monster") {
          this_object()->monster_died();
+         this_object()->clear_mounts();
+         this_object()->clear_passengers();
       }
       EVENT_D->unsubscribe_event("heart_beat");
       this_object()->destruct();
