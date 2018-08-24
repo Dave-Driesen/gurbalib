@@ -47,7 +47,7 @@ static void main(string str) {
    }
 
    if (this_player()->is_dead()) {
-      write("You can not do that when your are not among the living.\n");
+      write("You can not do that when you are not among the living.\n");
       return;
    }
 
@@ -58,7 +58,7 @@ static void main(string str) {
    }
 
    if (!obj->is_eatable()) {
-      write(" You can not consume that.\n");
+      write(" You cannot consume that.\n");
       return;
    }
 
