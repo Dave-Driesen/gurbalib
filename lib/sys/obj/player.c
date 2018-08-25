@@ -195,9 +195,9 @@ string query_title(void) {
    if (!t || t == "") {
       t = "$N the title less";
    }
-   t2 = replace_string(t, "$N", capitalize(living_name));
+   t2 = replace_string(t, "$N", query_Name());
    if (t2 == t) {
-      t2 = capitalize(living_name) + " " + t;
+      t2 = query_Name() + " " + t;
    }
 
    return t2;
@@ -794,8 +794,8 @@ static void do_look_obj(object obj) {
 
 static void do_look_liv(object obj) {
    int i, flag;
-   object *objs;
-
+   object *objs, *is_riding;
+   
    this_environment()->tell_room(this_player(), this_player()->query_Name() +
       " looks at " + capitalize(obj->query_id()) + ".\n");
 
@@ -805,17 +805,11 @@ static void do_look_liv(object obj) {
    write("A " + obj->query_gender() + " " + obj->query_race() +
       " who is " + obj->query_status() + "\n");
 
+   write(" \n" + capitalize(obj->query_gender_pronoun()) + " is using:\n");
+
    flag = 0;
    objs = obj->query_inventory();
-
-   if (obj->query_gender() == "male") {
-      write(" \nHe is using:\n");
-   } else if (obj->query_gender() == "female") {
-      write(" \nShe is using:\n");
-   } else {
-      write(" \nIt is using:\n");
-   }
-
+    
    for (i = 0; i < sizeof(objs); i++) {
       if (objs[i]->is_worn()) {
          write("  " + objs[i]->query_short() + " %^CYAN%^[" +
@@ -825,10 +819,23 @@ static void do_look_liv(object obj) {
          write("  " + objs[i]->query_short() + " %^CYAN%^[" +
             objs[i]->query_wield_position() + "]%^RESET%^\n");
          flag = 1;
+      } else if (objs[i]->is_ridden()) {
+         write("  " + objs[i]->query_short() + "%^RESET%^\n");
+         flag = 1;
       }
    }
    if (flag == 0) {
       write("  Nothing.");
+   }
+   
+   
+   is_riding = obj->query_riding();
+   if (sizeof(is_riding) != 0) {
+      write("\n\n" + capitalize(obj->query_gender_pronoun()) + " is riding " + join_array_human_readable(is_riding) + ".");
+   }
+   
+   if (obj->is_rideable() && obj->has_passengers()) {
+      write("\n\n" + capitalize(obj->query_gender_pronoun()) + " is being ridden by " + join_array_human_readable(obj->get_passengers()) + "\n");
    }
 }
 
@@ -895,6 +902,11 @@ void do_quit(void) {
          if (objs[i]->is_wielded()) {
             this_player()->do_unwield(objs[i]);
             this_player()->targeted_action(objs[i]->query_unwield_message(),
+               nil, objs[i]);
+         }
+         if (objs[i]->is_ridden()) {
+            this_player()->do_unride(objs[i]);
+            this_player()->targeted_action(objs[i]->query_unride_message(),
                nil, objs[i]);
          }
 

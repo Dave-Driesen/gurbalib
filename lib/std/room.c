@@ -418,13 +418,6 @@ string body_exit(object who, string dir) {
    string error, lname, aname;
    object room, *inventory, *riding;
 
-   /* if riding, move the vehicle, not the passenger
-   riding = who->query_riding();
-   if (sizeof(riding) != 0) {
-      body_exit(riding[0],dir);
-      return nil;
-   }
-    */
    if (!query_exit(dir) && !query_hidden_exit(dir)) {
       write("You can't go " + dir + ".\n");
       return nil;
@@ -463,13 +456,19 @@ string body_exit(object who, string dir) {
 
       event("body_leave", who);
       riding = who->query_riding();
-      if ((who->is_rideable()) || (who->has_passengers())) {
-         who->targeted_action("$N $vleave " + dir + ", taking " + who->query_passengers_human_readable() + " with $r.", nil);
+      if ((who->is_rideable()) && (who->has_passengers())) {
+         who->targeted_action("$N $vleave " + dir + ", taking " + join_array_human_readable(who->get_passengers()) + " with $r.", nil);
       } else {
-         write("in");
          if (sizeof(riding) != 0) {
-            who->targeted_action("$N $vleave " + dir + ", taking " + riding[0]->query_passengers_human_readable() + " with $r.", nil);
-            /*//tell_room(who, riding[0]->query_name() + " leaves " + dir + ", taking " + riding[0]->query_passengers_human_readable() + " with " + who->query_gender_object_pronoun() + ".\n");*/
+            string rname;
+            rname = riding[0]->query_Name();
+            if (!rname) rname = "the " + riding[0]->query_id();
+
+            if(riding[0]->query_passenger_count()>1) {
+               who->targeted_action("$N $vride " + rname + " " + dir + ", taking " + join_array_human_readable(riding[0]->get_passengers() - ( { who } )) + " with $r.", nil);
+            } else {
+               tell_room(who, lname + " rides " + rname + " " + dir + ".\n");
+            }
          } else {
             tell_room(who, lname + " leaves " + dir + ".\n");
          }
@@ -479,15 +478,13 @@ string body_exit(object who, string dir) {
          last_exit = time();
       }
       if (sizeof(riding) != 0) {
-         /*riding[0]->move(query_exit(dir));*/
-         /*body_exit(riding[0],dir);*/
          object* passengers;
          passengers=riding[0]->get_passengers();
          for (i = 0; i < sizeof(passengers); i++) {
             passengers[i]->move(query_exit(dir));
          }
       }
-      if ((who->is_rideable()) || (who->has_passengers())) {
+      if ((who->is_rideable()) && (who->has_passengers())) {
          object* passengers;
          passengers=who->get_passengers();
          for (i = 0; i < sizeof(passengers); i++) {
@@ -508,10 +505,10 @@ string body_exit(object who, string dir) {
       }
 
       event("body_leave", who);
-      if ((who->is_rideable()) || (who->has_passengers())) {
-         tell_room(who, lname + " leaves " + dir + ", taking " + who->query_passengers_human_readable() + " with " + who->query_gender_object_pronoun() + ".\n");
+      if ((who->is_rideable()) && (who->has_passengers())) {
+         who->targeted_action("$N $vleave " + dir + ", taking " + join_array_human_readable(who->get_passengers()) + " with $r.", nil);
       } else {
-         tell_room(who, lname + " leaves " + dir + ".\n");
+         who->targeted_action("$N $vleave " + dir + ".", nil);
       }
       error = catch(who->move(query_hidden_exit(dir)));
       if (who->is_player()) {
@@ -520,9 +517,8 @@ string body_exit(object who, string dir) {
       riding = who->query_riding();
       if (sizeof(riding) != 0) {
          riding[0]->move(query_hidden_exit(dir));
-         /*body_exit(riding[0],dir);*/
       }
-      if ((who->is_rideable()) || (who->has_passengers())) {
+      if ((who->is_rideable()) && (who->has_passengers())) {
          object* passengers;
          passengers=who->get_passengers();
          for (i = 0; i < sizeof(passengers); i++) {
@@ -548,8 +544,11 @@ string body_exit(object who, string dir) {
    if (sizeof(riding) != 0) {
       object * passengers;
       string snos;
+      string rname;
+      rname = riding[0]->query_Name();
+      if (!rname) rname = "a " + riding[0]->query_id();
       if (riding[0]->query_passenger_count()<2) snos="s"; else snos="";
-      room->tell_room(who, riding[0]->query_passengers_human_readable() + " enter" +snos +", riding " + riding[0]->query_short() + ".\n");
+      room->tell_room(who, join_array_human_readable(riding[0]->get_passengers()) + " enter" +snos +", riding " + rname + ".\n");
       /* Move the vehicle */
       riding[0]->move(room);
       room->event("body_enter", riding[0]);
@@ -561,10 +560,11 @@ string body_exit(object who, string dir) {
       }
    } else {
       room->event("body_enter", who);
-      if ((who->is_rideable()) || (who->has_passengers())) {
+      if ((who->is_rideable()) && (who->has_passengers())) {
          object * passengers;
-         room->tell_room(who, aname + " enters, carrying " + who->query_passengers_human_readable() + ".\n");
          passengers=who->get_passengers();
+         room->tell_room(who, aname + " enters, carrying " + join_array_human_readable(passengers) + ".\n");
+         
          for (i = 0; i < sizeof(passengers); i++) {
             passengers[i]->move(room);
             room->event("body_enter", passengers[i]);

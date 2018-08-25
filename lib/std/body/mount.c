@@ -4,6 +4,8 @@ static object *riding;
 
 void do_ride(object ob) {
    
+   if (nilp(riding)) riding = ({ });
+   
    if (ob->has_passenger(this_player())) {
       write("You are already riding that.");
       return;
@@ -20,6 +22,10 @@ void do_ride(object ob) {
 void do_unride(object ob) {
    int i;
 
+   if (nilp(riding)) riding = ({ });
+   
+   if (!ob) return;
+   
    if (!ob->has_passenger(this_player())) {
       write("You are not riding that.");
       return;
@@ -37,6 +43,8 @@ void do_unride(object ob) {
 void clear_mounts() {
    int i;
 
+   if (nilp(riding)) riding = ({ });
+   
    while (sizeof(riding)>0) {
       riding[0]->remove_passenger(this_player());
       riding -= ( { riding[0] } );
@@ -44,7 +52,16 @@ void clear_mounts() {
 }
 
 object *query_riding(void) {
+   
+   if (nilp(riding)) riding = ({ });
+   
    return riding;
 }
 
+int is_riding(void) {
+   
+   if (nilp(riding)) riding = ({ });
+
+   return (sizeof(riding) != 0);
+}
 
