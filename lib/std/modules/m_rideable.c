@@ -44,7 +44,7 @@ void remove_passenger(object m) {
             return;
          }
       }
-      /* object wqas not a passnger of this vehicle */
+      /* object was not a passenger of this vehicle */
     }
 }
 
@@ -99,34 +99,6 @@ string* query_passengers(void) {
    return result;
 }
 
-string query_passengers_human_readable(){
-   
-   int i;
-   string passenger_list;
-   passenger_list="";
-
-   if (nilp(passengers)) passengers = ({ });
-   
-   switch (sizeof(passengers)) {
-      case 0:
-         return "";
-         break;
-      case 1: 
-        passenger_list=passengers[0]->query_Name();
-        break;
-      case 2: 
-         passenger_list=passengers[0]->query_Name() + " and " + passengers[1]->query_Name();
-         break;
-      case 3:
-         for (i = 0; i < sizeof(passengers)-2; i++) {
-            passenger_list+=passengers[i]->query_Name() + ", ";
-         }
-         passenger_list += passengers[sizeof(passengers)-2]->query_Name() + " and " + passengers[sizeof(passengers)-1]->query_Name();
-   }
-
-   return passenger_list;
-}
-
 int query_passenger_count(void) {
    
    if (nilp(passengers)) passengers = ({ });
@@ -136,7 +108,6 @@ int query_passenger_count(void) {
 
 int has_passengers(void) {
    
-   write ("passenger count = " + query_passenger_count());
    return (query_passenger_count()>0);
 }
 
