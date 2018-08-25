@@ -108,12 +108,12 @@ static void main(string arg) {
 
    if (lowercase(time) == "now") {
       LOG_D->write_log("shutdown", ctime(time()) + ": " +
-         this_player()->query_Name() + " forced a shutdown.\n" + "REASON: " +
+         this_player()->query_Name_proofed("A") + " forced a shutdown.\n" + "REASON: " +
          reason + "\n");
       do_shutdown();
    } else {
       LOG_D->write_log("shutdown", ctime(time()) + ": " +
-         this_player()->query_Name() + " forced a shutdown.\n" + "REASON: " +
+         this_player()->query_Name_proofed("A") + " forced a shutdown.\n" + "REASON: " +
          reason + "\n");
       countdown(str2val(time));
    }

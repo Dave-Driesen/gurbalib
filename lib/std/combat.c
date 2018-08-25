@@ -156,9 +156,9 @@ int run_away(void) {
 
 void receive_damage(object who, int dam) {
    int x, when;
-
+   
    this_object()->message("%^RED%^You took " + dam + " damage from " +
-      who->query_id() + ".%^RESET%^");
+      who->query_Name_proofed("the") + ".%^RESET%^");
 
    if (this_object()->query_hp() <= dam) {
       x = this_object()->query_max_hp();
@@ -425,7 +425,7 @@ void cast_spell(object target) {
    if (!message || (message == "")) {
       message = "Casts an unamed spell at $t.";
    }
-   message = replace_string(message, "$t", target->query_name());
+   message = replace_string(message, "$t", target->query_name_proofed("the"));
 
    target->query_environment()->tell_room(this_object(), message);
 

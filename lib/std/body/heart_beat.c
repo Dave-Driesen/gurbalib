@@ -190,15 +190,6 @@ void die(void) {
    object killer, obj, *inv;
    int i;
 
-   string target,atarget;
-   target=this_object()->query_Name();
-   if (target) {
-      atarget=target;
-   } else {
-      target="the " + this_object()->query_id();
-      atarget="a " + this_object()->query_id();
-   } 
-
    killer = this_object()->query_killer();
    if (killer) {
       if (killer->is_player() ) {
@@ -206,7 +197,7 @@ void die(void) {
       }
       
       killer->message("%^BOLD%^%^CYAN%^You killed " +
-         target + ".%^RESET%^");
+         this_object()->query_Name_proofed("the") + ".%^RESET%^");
    }
 
    this_object()->simple_action("$N $vfall to the ground...dead.");
@@ -224,7 +215,7 @@ void die(void) {
       inv[i]->move(obj);
    }
 
-   obj->set_name(atarget);
+   obj->set_name(this_object()->query_Name_proofed("a"));
    obj->move(this_object()->query_environment());
 
    if (this_object()->is_player()) {

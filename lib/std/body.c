@@ -51,6 +51,36 @@ string query_Name(void) {
    }
 }
 
+string query_name_proofed(string prefix) {
+   
+   string result;
+   
+   argcheck(prefix, 1, "string");
+   if (nilp(prefix)) {
+      prefix="the";
+   }
+
+   result=query_name();
+   if (!result) result=prefix + " " + query_id();
+   
+   return  result;
+}
+
+string query_Name_proofed(string prefix) {
+   
+   string result;
+   
+   argcheck(prefix, 1, "string");
+   if (nilp(prefix)) {
+      prefix="the";
+   }
+      
+   result=query_Name();
+   if (!result) result=prefix + " " + query_id();
+   
+   return  result;
+}
+
 int is_possessed(void) {
    if (possessor) {
       return 1;

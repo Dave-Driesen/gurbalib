@@ -40,8 +40,6 @@ void setup_alsos() {
 
 static void main(string str) {
 
-   string name;
-   
    if (!alsos) {
       setup_alsos();
    }
@@ -55,14 +53,11 @@ static void main(string str) {
       return;
    }
 
-   name=this_player()->query_Name();
-   if (!name) name="The " + this_player()->query_id();
-   
    if (!this_player()->is_player() || query_wizard(this_player())) {
       this_player()->query_environment()->tell_room(nil,
-      name + " " + str);
+         this_player()->query_Name_proofed("The") + " " + str);
    } else {
       this_player()->query_environment()->tell_room(nil, "-> " +
-         name + " " + str);
+         this_player()->query_Name_proofed("The") + " " + str);
    }
 }
