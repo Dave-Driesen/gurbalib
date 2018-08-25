@@ -1,26 +1,36 @@
+string resolve_name(object obj) {
+   
+   string result;
+   
+   result=obj->query_Name();
+   if (!result) result=obj->query_short();
+   
+   return result;
+}
+
 string join_array_human_readable(object* objects){
    
    int i;
-   string object_list;
+   string object_list, entry;
    object_list="";
 
    if (nilp(objects)) objects = ({ });
-   
+
    switch (sizeof(objects)) {
       case 0:
          return "";
          break;
       case 1: 
-        object_list=objects[0]->query_Name();
-        break;
-      case 2: 
-         object_list=objects[0]->query_Name() + " and " + objects[1]->query_Name();
+         object_list+=resolve_name(objects[0]);
          break;
       case 3:
          for (i = 0; i < sizeof(objects)-2; i++) {
-            object_list+=objects[i]->query_Name() + ", ";
+            object_list+=resolve_name(objects[i]) + ", ";
          }
-         object_list += objects[sizeof(objects)-2]->query_Name() + " and " + objects[sizeof(objects)-1]->query_Name();
+      case 2: 
+         object_list+=resolve_name(objects[sizeof(objects)-2]) + " and ";
+         object_list+=resolve_name(objects[sizeof(objects)-1]);
+         break;
    }
 
    return object_list;
