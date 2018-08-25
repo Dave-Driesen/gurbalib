@@ -53,15 +53,27 @@ static void main(string str) {
       return;
    }
 
-   /*if (empty_str(str) || (str == "all")) {*/
-      is_riding = this_player()->query_riding();
+   if (!this_player()->is_riding()) {
+      write("You are not riding anything.\n");
+      return;
+   }
+
+   is_riding = this_player()->query_riding();
+
+   if (empty_str(str) || (str == "all")) {
       max = sizeof(is_riding);
       for (i = 0; i < max; i++) {
          do_dismount(is_riding[i], 0);
       }
-      /*return;
+      return;
    }
-
-   obj = this_player()->present(lowercase(str));
-   do_dismount(obj, 1);*/
+  
+   for (i = 0; i < sizeof(is_riding); i++) {
+      if (is_riding[i]->is_id(lowercase(str))) {
+         do_dismount(is_riding[i], 0);
+         return;
+      }
+   }
+   
+   write("It would appear you are not riding that!");
 }
