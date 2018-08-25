@@ -79,42 +79,9 @@ static void main(string str) {
 
    ob = this_environment()->present(str);
 
-   if (ob && ob->is_rideable()) {
-      if (ob->can_ride(this_player())) {
-         /*ob->do_ride(this_player());*/
-         do_ride(ob,TRUE);
-      } else {
-         write("You can't ride that.");
-      }
+   if (ob && ob->is_rideable() && ob->can_ride(this_player())) {
+      do_ride(ob,TRUE);
    } else {
-      ob = this_player()->present(str);
-      if (ob && ob->is_rideable()) {
-         if (ob->can_ride(this_player())) {
-            /*ob->do_ride(this_player());*/
-            do_ride(ob,0);
-         } else {
-            write("You can't ride that.");
-         }
-      } else {
-         ob = this_environment()->present("board");
-         if (ob) {
-            if (!str || (str == "")) {
-               write("Ride what?");
-               return;
-            }
-
-            if (ob->query_msg_exists(str) == 1) {
-               lines = explode(ob->query_message(str), "\n");
-               write(implode(lines[..3], "\n"));
-               this_player()->more(lines[4..]);
-            } else {
-               write("No such message.\n");
-            }
-            return;
-         } else {
-            write("Ride what?");
-            return;
-         }
-      }
+      write("You can't ride that.");
    }
 }
