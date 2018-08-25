@@ -107,6 +107,10 @@ int is_alias(string cmd) {
       return 1;
    }
 
+   if (!this_player()->query_name()) {
+      return 0;
+   }
+   
    if (query_wizard(this_player()->query_name())) {
       if (wizard_alias[cmd]) {
          return 1;
