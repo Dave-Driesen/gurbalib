@@ -457,7 +457,8 @@ string body_exit(object who, string dir) {
       }
 
       if (query_exit(dir)[0] == '#') {
-         return call_other(this_object(), query_exit(dir)[1..]);
+         call_other(this_object(), query_exit(dir)[1..]);
+         return nil;
       }
 
       event("body_leave", who);
@@ -502,7 +503,8 @@ string body_exit(object who, string dir) {
       }
 
       if (query_hidden_exit(dir)[0] == '#') {
-         return call_other(this_object(), query_exit(dir)[1..]);
+         call_other(this_object(), query_exit(dir)[1..]);
+         return nil;
       }
 
       event("body_leave", who);
