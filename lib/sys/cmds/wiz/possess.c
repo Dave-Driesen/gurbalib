@@ -39,8 +39,10 @@ static void main(string str) {
 
    if (empty_str(str)) {
       if (this_user()->query_player()->is_possessing()) {
-         write("Your release your grasp on " + this_player()->query_name() +
-            ".");
+         string target;
+         target=this_player()->query_name();
+         if (!target) target="the " + this_player()->query_id();
+         write("Your release your grasp on " + target + ".");
          this_user()->query_player()->query_possessing()->set_possessor(nil);
          this_user()->query_player()->set_possessing(nil);
 
