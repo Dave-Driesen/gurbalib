@@ -56,7 +56,7 @@ void add_killed_by(object who, int t) {
    killed_by[t] = who->file_name();
 #ifdef DO_STATS
    str = "killed: " + this_object()->file_name() + " by " +
-   who->query_Name() + "(" + who->file_name() + "):" + t + "\n";
+   who->query_Name_proofed("a") + "(" + who->file_name() + "):" + t + "\n";
    LOG_D->write_log("stats.raw", str);
 #endif
 }
@@ -311,6 +311,7 @@ private void handle_performance_enhancement_expires() {
 
 void attack_with(string skill, object weapon, object target) {
    int me, tmp, damage;
+   string yourweapon;
 
    if ( (wimpy == 1) &&
       (wimpy_hp > this_object()->query_hp())) {
@@ -374,15 +375,28 @@ void attack_with(string skill, object weapon, object target) {
 
          damage = damage_hook(target, weapon, damage);
          damage = target->after_damage_hook(this_object(), weapon, damage);
-
+         
+         switch (this_object()->wield_count(weapon->query_id())) {
+            case 0:
+               /* for compatibility reasons */
+               yourweapon=weapon->query_id();
+               break;
+            case 1:
+               yourweapon="your " + weapon->query_Name_proofed("");
+               break;
+            default:
+               yourweapon="one of your " + weapon->query_Name_proofed("") + "s";
+               break;
+         }
+         
          if (damage == 0) {
             this_object()->targeted_action("$N " + 
-               "$v" + weapon->query_weapon_action() + " $T with a " +
-               weapon->query_id() + ", but $vdo no damage!", target);
+               "$v" + weapon->query_weapon_action() + " $T with " +
+               yourweapon + ", but $vdo no damage!", target);
          } else {
             this_object()->targeted_action("$N " +
-               "$v" + weapon->query_weapon_action() + " $T with a " +
-               weapon->query_id() + ".", target);
+               "$v" + weapon->query_weapon_action() + " $T with " +
+               yourweapon + ".", target);
          }
       }
 
