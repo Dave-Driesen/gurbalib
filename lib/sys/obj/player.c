@@ -1376,3 +1376,21 @@ void update_internal_weight(void) {
    set_internal_weight(w);
 }
 
+int wield_count(string find_id) {
+   
+   object* objs;
+   int i,count;
+   
+   count=0;
+   
+   if ((!find_id) || (find_id=="")) return 0;
+   
+   objs = query_inventory() + ( { } );
+
+   for (i = 0; i < sizeof(objs); i++) {
+      if ((objs[i]->is_wielded()) && (objs[i]->is_id(find_id))) {
+         count++;
+      }
+   }
+   return count;
+}
