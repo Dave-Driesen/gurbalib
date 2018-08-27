@@ -3,6 +3,7 @@ inherit "/std/body/size";   /* satch */
 inherit "/std/modules/m_autoload_filename";
 inherit "/std/modules/m_bane";
 
+static string living_name;
 static string short_desc;
 string long_desc;
 static object object_environment;
@@ -123,6 +124,65 @@ int is_adj(string adj) {
       }
    }
    return 0;
+}
+
+string query_name(void) {
+     
+   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
+      /* For generic-named NPCs we return nil 
+       * because it appears the calling code is built that way */
+      return nil;
+   } else {
+      /* For named NPCs, return the actual name */
+      return  living_name;
+   }
+}
+
+string query_Name(void) {
+   
+   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
+      /* For generic-named NPCs we return nil 
+       * because it appears the calling code is built that way */
+      return nil;
+   } else {
+      /* For named NPCs, return the actual name */
+      return capitalize(living_name);
+   }
+}
+
+string query_name_proofed(string prefix) {
+   
+   string result;
+   
+   argcheck(prefix, 1, "string");
+   if (nilp(prefix)) {
+      prefix="the";
+   }
+
+   result=query_name();
+   if (!result) result=prefix + " " + query_id();
+   
+   return  result;
+}
+
+string query_Name_proofed(string prefix) {
+   
+   string result;
+   
+   argcheck(prefix, 1, "string");
+   if (nilp(prefix)) {
+      prefix="the";
+   }
+      
+   result=query_Name();
+   if (!result) result=prefix + " " + query_id();
+   
+   return  result;
+}
+
+void set_name(string str) {
+   living_name = str;
+   add_id(str);
 }
 
 void set_short(string str) {

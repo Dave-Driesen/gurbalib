@@ -17,7 +17,6 @@ inherit "/std/body/follow";
 
 static object possessing;    /* The object this player/monster is possessing */
 static object possessor;     /* who is possessing this object */
-string living_name;
 
 int is_player(void) {  /* Player objects over write this one... */
    return 0;
@@ -25,60 +24,6 @@ int is_player(void) {  /* Player objects over write this one... */
 
 int is_living(void) {
    return 1;
-}
-
-string query_name(void) {
-     
-   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
-      /* For generic-named NPCs we return nil 
-       * because it appears the calling code is built that way */
-      return nil;
-   } else {
-      /* For named NPCs, return the actual name */
-      return  living_name;
-   }
-}
-
-string query_Name(void) {
-   
-   if ((!living_name) || (living_name=="") || (living_name=="mudlib")) {
-      /* For generic-named NPCs we return nil 
-       * because it appears the calling code is built that way */
-      return nil;
-   } else {
-      /* For named NPCs, return the actual name */
-      return capitalize(living_name);
-   }
-}
-
-string query_name_proofed(string prefix) {
-   
-   string result;
-   
-   argcheck(prefix, 1, "string");
-   if (nilp(prefix)) {
-      prefix="the";
-   }
-
-   result=query_name();
-   if (!result) result=prefix + " " + query_id();
-   
-   return  result;
-}
-
-string query_Name_proofed(string prefix) {
-   
-   string result;
-   
-   argcheck(prefix, 1, "string");
-   if (nilp(prefix)) {
-      prefix="the";
-   }
-      
-   result=query_Name();
-   if (!result) result=prefix + " " + query_id();
-   
-   return  result;
 }
 
 int is_possessed(void) {
