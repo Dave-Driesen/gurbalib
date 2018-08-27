@@ -1,9 +1,9 @@
 void save_object(string file) {
    if (!valid(file, MODE_READ)) {
 #ifdef ENABLE_STACK_SECURITY
-      error("Access to " + file + " denied");
+      error("save_object: Read access to " + file + " denied");
 #else
-      console_msg("Access to " + file +
+      console_msg("save_object: Read access to " + file +
          " would have been denied, ignoring...\n");
 #endif
    }

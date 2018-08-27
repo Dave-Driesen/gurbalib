@@ -1,10 +1,10 @@
 static int remove_file(string file) {
    if (!valid(file, MODE_WRITE)) {
 #ifdef ENABLE_STACK_SECURITY
-      console_msg("Access to " + file + " denied\n");
+      console_msg("remove_file: Write access to " + file + " denied\n");
       return 0;
 #else
-      console_msg("Access to " + file +
+      console_msg("remove_file: Write access to " + file +
          " would have been denied, ignoring...\n");
 #endif
    }

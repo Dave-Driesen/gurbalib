@@ -1,10 +1,10 @@
 static int rename_file(string from, string to) {
    if (!valid(from, MODE_READ)) {
 #ifdef ENABLE_STACK_SECURITY
-      console_msg("Access to " + from + " denied\n");
+      console_msg("rename_file: Read access to " + from + " denied\n");
       return 0;
 #else
-      console_msg("Access to " + from +
+      console_msg("rename_file: Read access to " + from +
          " would have been denied, ignoring...\n");
 #endif
    }
@@ -14,7 +14,8 @@ static int rename_file(string from, string to) {
       console_msg("Access to " + to + " denied\n");
       return 0;
 #else
-      console_msg("Access to " + to + " would have been denied, ignoring...\n");
+      console_msg("rename_file: Write access to " + to + 
+         " would have been denied, ignoring...\n");
 #endif
    }
 
